@@ -93,7 +93,7 @@
         color1: "#fa8033",
         color2: "#e3915d",
         color3: "#be5613",
-        //docsURI: "https://github.com/ScratchFakemon/MyScratchExtensions/blob/main/Test/Docs.md",
+        docsURI: "https://github.com/ScratchFakemon/extensions/blob/master/docs/Fakemon/Docs.md",
 
         blocks: [
           {
