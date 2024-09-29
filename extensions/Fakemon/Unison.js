@@ -106,6 +106,11 @@
             blockType: Scratch.BlockType.LABEL,
             text: "Unison File System",
           },
+           {
+            blockType: Scratch.BlockType.LABEL,
+            text: "(There's nothing here yet...)",
+          },
+          ---
           {
             blockType: Scratch.BlockType.LABEL,
             text: "Kernel Initialization",
