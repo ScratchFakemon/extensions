@@ -24,7 +24,7 @@ set the OS name to [os name] :: #fa8033 // Changes the name that OS name reports
 ```
 
 ## Syscalls
-### Note: Syscall (System Call) IDs and data can be in any format
+#### Note: Syscall (System Call) IDs and data can be in any format
 
 ```scratch
 send syscall with id [foo] and data [bar] :: #fa8033 // Sends a syscall with an ID and data
