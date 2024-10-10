@@ -3,10 +3,10 @@
 // Description: An operating system kernel, made into its own extension!
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/> and BambusOS <https://scratch.mit.edu/users/BambusOS/>
 // License: MIT <https://opensource.org/license/MIT>
-//Documentation: <https://github.com/ScratchFakemon/extensions/blob/master/docs/Fakemon/Docs.md>
+//Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 
 // Above is the TurboWarp extension header. 
-// It tells TurboWarp and other Scratch Mods (Penguin, Snail, etc.) things about the extension.
+// It tells TurboWarp and other TurboWarp-Based Scratch Mods (PenguinMod, Snail-IDE, etc.) things about the extension.
 // Please don't modifiy it unless you have to!
 
 
@@ -96,7 +96,7 @@
         color1: "#fa8033",
         color2: "#e3915d",
         color3: "#be5613",
-        docsURI: "https://github.com/ScratchFakemon/extensions/blob/master/docs/Fakemon/Docs.md",
+        docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
 
         blocks: [
           {
@@ -132,7 +132,7 @@
 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Operating System Name",
+            text: "Operating System Info",
           },
 
           {
