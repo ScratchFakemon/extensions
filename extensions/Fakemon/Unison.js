@@ -3,6 +3,7 @@
 // Description: An operating system kernel, made into its own extension!
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/> and BambusOS <https://scratch.mit.edu/users/BambusOS/>
 // License: MIT <https://opensource.org/license/MIT>
+//Documentation: <https://github.com/ScratchFakemon/extensions/blob/master/docs/Fakemon/Docs.md>
 
 // Above is the TurboWarp extension header. 
 // It tells TurboWarp and other Scratch Mods (Penguin, Snail, etc.) things about the extension.
@@ -69,7 +70,7 @@
     // _findObjectInActivePath(filename) {}
     import() {}
     export() {
-      return JSON.jsonify({ ...this.info, content: this.data });
+      return JSON.jsonify({ ...this.info, content: this._data });
     }
     newFile(path, filename, content) {}
     newDirectory(path, filename) {}
@@ -77,9 +78,11 @@
 
   class UnisonKernel {
     constructor() {
-      this.logo =
+      this.menulogo =
         "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0My40IiBoZWlnaHQ9IjQzLjQiIHZpZXdCb3g9IjAsMCw0My40LDQzLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTguMywtMTU4LjMpIj48ZyBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIGZpbGw9IiNmYTgwMzMiIHN0cm9rZT0iI2UzOTE1ZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+";
-      this.isInit = false;
+      this.blocklogo = 
+        "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0MS40IiBoZWlnaHQ9IjQxLjQiIHZpZXdCb3g9IjAsMCw0MS40LDQxLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTkuMywtMTU5LjMpIj48ZyBmaWxsPSJub25lIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjIwLjY5OTk5OTk5OTk5OTk2OjIwLjY5OTk5OTk5OTk5OTk5LS0+";
+        this.isInit = false;
       this.osName = "";
       this.fs = undefined;
     }
@@ -88,8 +91,8 @@
       return {
         id: "unisonKernel",
         name: "Unison",
-        menuIconURI: this.logo,
-        blockIconURI: this.logo,
+        menuIconURI: this.menulogo,
+        blockIconURI: this.blocklogo,
         color1: "#fa8033",
         color2: "#e3915d",
         color3: "#be5613",
@@ -110,8 +113,8 @@
             blockType: Scratch.BlockType.LABEL,
             text: "(There's nothing here yet...)",
           },
-          ---
-          {
+          '---'
+          ,{
             blockType: Scratch.BlockType.LABEL,
             text: "Kernel Initialization",
           },
@@ -171,19 +174,21 @@
           {
             opcode: "receiveSyscall",
             blockType: Scratch.BlockType.EVENT,
-            text: "when I recieve syscall [SYSCALL_ID] with data [SYSCALL_DATA]",
+            text: "when I recieve syscall [SYSCALL_ID]",
             isEdgeActivated: false,
           arguments: {
               SYSCALL_ID: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "foo",
               },
-              SYSCALL_DATA: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "bar",
-              },
             },
           },
+          /*{
+            opcode: "SyscallData",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "recieved syscall data",
+            //disableMonitor: true, (I think some people might want to show the data.)
+          },*/
         ],
         menus: {
           SYSCALL_IDS: [
@@ -217,8 +222,12 @@
         DATA: SYSCALL_DATA,
         SENDER: undefined,
       });
+      
     }
+    
+    
   }
 
   Scratch.extensions.register(new UnisonKernel());
+// @ts-ignore
 })(Scratch);
