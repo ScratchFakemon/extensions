@@ -6,10 +6,6 @@
 // Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 // License: MIT <https://opensource.org/license/MIT>
 
-// Above is the TurboWarp extension header. 
-// It tells TurboWarp and other TurboWarp-Based Scratch Mods (PenguinMod, Snail-IDE, etc.) things about the extension.
-// Please don't modifiy it unless you have to!
-
 
 (function (Scratch) {
   "use strict";
@@ -39,7 +35,7 @@
       };
       this.activePath = "/";
     }
-    _addObjectAbs(path, permissions, folder, content) {}
+    _addObjectAbs(path, permissions, folder, content) { }
     _findObjectAbs(path) {
       let splitPath = path.split("/"); // the first index will always be blank
       let files = this._data;
@@ -71,24 +67,31 @@
       return files[j];
     }
     // _findObjectInActivePath(filename) {}
-    import() {}
+    import() { }
     export() {
       // @ts-ignore
       return JSON.jsonify({ ...this.info, content: this._data });
     }
-    newFile(path, filename, content) {}
-    newDirectory(path, filename) {}
+    newFile(path, filename, content) { }
+    newDirectory(path, filename) { }
   }
 
   class UnisonKernel {
     constructor() {
       this.menulogo =
         "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0My40IiBoZWlnaHQ9IjQzLjQiIHZpZXdCb3g9IjAsMCw0My40LDQzLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTguMywtMTU4LjMpIj48ZyBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIGZpbGw9IiNmYTgwMzMiIHN0cm9rZT0iI2UzOTE1ZCIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+";
-      this.blocklogo = 
+      this.blocklogo =
         "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0MS40IiBoZWlnaHQ9IjQxLjQiIHZpZXdCb3g9IjAsMCw0MS40LDQxLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTkuMywtMTU5LjMpIj48ZyBmaWxsPSJub25lIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjIwLjY5OTk5OTk5OTk5OTk2OjIwLjY5OTk5OTk5OTk5OTk5LS0+";
-        this.isInit = false;
+      this.isInit = false;
       this.osName = "";
       this.fs = undefined;
+      this.callData = undefined;
+      this.apps = [];
+      this.util = vm.runtime;
+
+      vm.on("PROJECT_START", () => {
+        this.apps = [];
+      })
     }
 
     getInfo() {
@@ -98,10 +101,9 @@
         menuIconURI: this.menulogo,
         blockIconURI: this.blocklogo,
         color1: "#fa8033",
-        color2: "#e3915d",
-        color3: "#be5613",
+        // color2: "#e3915d",
+        // color3: "#be5613",
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
-
         blocks: [
           {
             opcode: "semver",
@@ -118,7 +120,7 @@
             text: "(There's nothing here yet...)",
           },
           '---'*/
-          ,{
+          , {
             blockType: Scratch.BlockType.LABEL,
             text: "Kernel Initialization",
           },
@@ -126,6 +128,12 @@
             opcode: "init",
             blockType: Scratch.BlockType.COMMAND,
             text: "initialize kernel",
+          },
+          {
+            opcode: "reportIsInit",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "is kernel initialized?",
+            disableMonitor: true,
           },
           {
             opcode: "whenInit",
@@ -136,7 +144,7 @@
 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Operating System Info",
+            text: "OS Info",
           },
 
           {
@@ -158,43 +166,76 @@
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Syscalls",
+            text: "Apps",
           },
           {
-            opcode: "sendSyscall",
+            opcode: "listApps",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "all installed apps",
+            disableMonitor: true,
+          },
+          {
+            opcode: "declareApp",
             blockType: Scratch.BlockType.COMMAND,
-            text: "send syscall with id [SYSCALL_ID] and data [SYSCALL_DATA]",
+            text: "declare an app called [NAME]",
             arguments: {
-              SYSCALL_ID: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my-app",
+              }
+            }
+          },
+          {
+            opcode: "whenAppDeclared",
+            blockType: Scratch.BlockType.EVENT,
+            test: "when app [NAME] gets declared",
+            isEdgeActivated: false,
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "my-app",
+              }
+            }
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: "Calls",
+          },
+          {
+            opcode: "sendCall",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "send call with id [CALL_ID] and data [CALL_DATA]",
+            arguments: {
+              CALL_ID: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "foo",
               },
-              SYSCALL_DATA: {
+              CALL_DATA: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "bar",
               },
             },
           },
           {
-            opcode: "receiveSyscall",
+            opcode: "receiveCall",
             blockType: Scratch.BlockType.EVENT,
-            text: "when I recieve syscall [SYSCALL_ID]",
+            text: "when I recieve call [CALL_ID]",
             isEdgeActivated: false,
-          arguments: {
-              SYSCALL_ID: {
+            arguments: {
+              CALL_ID: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "foo",
               },
             },
           },
           {
-            opcode: "SyscallData",
+            opcode: "callData",
             blockType: Scratch.BlockType.REPORTER,
-            text: "recieved syscall data",
+            text: "recieved call data",
           },
         ],
         menus: {
-          SYSCALL_IDS: [
+          CALL_IDS: [
             {
               text: "abc",
               value: "def",
@@ -203,7 +244,6 @@
         },
       };
     }
-
     semver() {
       return semver;
     }
@@ -213,32 +253,41 @@
       vm.runtime.startHats("unisonKernel_whenInit", {});
       return;
     }
+    reportIsInit() {
+      return !!this.isInit;
+    }
+    listApps() {
+      // @ts-ignore
+      return JSON.jsonify(this.apps)
+    }
     setOsName({ NAME }) {
       this.osName = NAME;
     }
     getOsName() {
       return this.osName;
     }
-    sendSyscall({ SYSCALL_ID, SYSCALL_DATA }) {
-      vm.runtime.startHats("unisonKernel_receiveSyscalll", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
+    declareApp({ NAME }) {
+      vm.runtime.startHats("unisonKernel_whenAppDeclared", {
+        NAME: NAME
+      })
+      this.apps = [...this.apps, NAME];
+    }
+    whenAppDeclared({ NAME }) {
+      return false; // TODO
+    }
+    sendCall({ CALL_ID, CALL_DATA }) {
+      this.util.startHats("unisonKernel_receiveCall", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
         {
-        ID: SYSCALL_ID,
-        DATA: SYSCALL_DATA,
-        SENDER: undefined,
-      
-      
-      });
-      this.sysData = SYSCALL_DATA
+          ID: CALL_ID,
+          DATA: CALL_DATA,
+          SENDER: undefined,
+        });
+      this.callData = CALL_DATA
     }
-    SyscallData() {
-      return this.sysData;
+    callData() {
+      return this.callData;
     }
-    
-    
-    
-    
   }
-
   Scratch.extensions.register(new UnisonKernel());
-// @ts-ignore
+//@ts-ignore
 })(Scratch);
