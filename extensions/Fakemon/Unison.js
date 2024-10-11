@@ -1,9 +1,10 @@
 // Name: Unison Kernel
 // ID: unisonKernel
 // Description: An operating system kernel, made into its own extension!
-// By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/> and BambusOS <https://scratch.mit.edu/users/BambusOS/>
+// By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
+// By: BambusOS <https://scratch.mit.edu/users/BambusOS/>
+// Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 // License: MIT <https://opensource.org/license/MIT>
-//Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 
 // Above is the TurboWarp extension header. 
 // It tells TurboWarp and other TurboWarp-Based Scratch Mods (PenguinMod, Snail-IDE, etc.) things about the extension.
@@ -50,7 +51,9 @@
       // -BambusOS
       // This is what happens when you look at Bambus's messy code LOL
       // -Scratch_Fakemon :)
+      // @ts-ignore
       while (!(path === dir || dir.length() > path.length())) {
+        // @ts-ignore
         for (i = 1; i < Object.keys(files).length(); i++) {
           if (`${path}/`.includes(`${dir}/${files[i]}/`)) {
             dir = `${dir}/${files[i].filename}`;
@@ -70,6 +73,7 @@
     // _findObjectInActivePath(filename) {}
     import() {}
     export() {
+      // @ts-ignore
       return JSON.jsonify({ ...this.info, content: this._data });
     }
     newFile(path, filename, content) {}
@@ -216,7 +220,8 @@
       return this.osName;
     }
     sendSyscall({ SYSCALL_ID, SYSCALL_DATA }) {
-      vm.runtime.startHats("unisonKernel_receiveSyscalll", {
+      vm.runtime.startHats("unisonKernel_receiveSyscalll", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
+        {
         ID: SYSCALL_ID,
         DATA: SYSCALL_DATA,
         SENDER: undefined,
@@ -228,7 +233,6 @@
     SyscallData() {
       return this.sysData;
     }
-    
     
     
     
