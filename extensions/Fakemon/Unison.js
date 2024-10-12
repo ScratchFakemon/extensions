@@ -87,8 +87,6 @@
       this.fs = undefined;
       this.callData = undefined;
       this.apps = [];
-      this.util = vm.runtime;
-
       vm.on("PROJECT_START", () => {
         this.apps = [];
       })
@@ -188,7 +186,7 @@
           {
             opcode: "whenAppDeclared",
             blockType: Scratch.BlockType.EVENT,
-            test: "when app [NAME] gets declared",
+            text: "when app [NAME] gets declared",
             isEdgeActivated: false,
             arguments: {
               NAME: {
@@ -258,7 +256,8 @@
     }
     listApps() {
       // @ts-ignore
-      return JSON.jsonify(this.apps)
+      return this.apps
+      //return JSON.jsonify(this.apps)
     }
     setOsName({ NAME }) {
       this.osName = NAME;
@@ -275,17 +274,19 @@
     whenAppDeclared({ NAME }) {
       return false; // TODO
     }
-    sendCall({ CALL_ID, CALL_DATA }) {
-      this.util.startHats("unisonKernel_receiveCall", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
+    sendCall({ CALL_ID, CALL_DATA })
+     {
+      vm.runtime.startHats("unisonKernel_receiveCalll", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
         {
           ID: CALL_ID,
           DATA: CALL_DATA,
           SENDER: undefined,
         });
-      this.callData = CALL_DATA
+        this.cd = CALL_DATA
+      
     }
     callData() {
-      return this.callData;
+      return this.cd;
     }
   }
   Scratch.extensions.register(new UnisonKernel());
