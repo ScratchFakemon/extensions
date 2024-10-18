@@ -1,9 +1,9 @@
 // Name: Unison Kernel
 // ID: unisonKernel
 // Description: An operating system kernel, made into its own extension!
+// Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
 // By: BambusOS <https://scratch.mit.edu/users/BambusOS/>
-// Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
 // License: MIT <https://opensource.org/license/MIT>
 
 
@@ -217,7 +217,7 @@
           {
             opcode: "receiveCall",
             blockType: Scratch.BlockType.EVENT,
-            text: "when I recieve call [CALL_ID]",
+            text: "when I receive call [CALL_ID]",
             isEdgeActivated: false,
             arguments: {
               CALL_ID: {
@@ -227,9 +227,9 @@
             },
           },
           {
-            opcode: "callData",
+            opcode: "retCallData",
             blockType: Scratch.BlockType.REPORTER,
-            text: "recieved call data",
+            text: "received call data",
           },
         ],
         menus: {
@@ -274,19 +274,23 @@
     whenAppDeclared({ NAME }) {
       return false; // TODO
     }
-    sendCall({ CALL_ID, CALL_DATA })
-     {
-      vm.runtime.startHats("unisonKernel_receiveCalll", //Technically, it's supposed to have 2 l's (not 3), but the block is activated forever when you do that.
-        {
-          ID: CALL_ID,
-          DATA: CALL_DATA,
-          SENDER: undefined,
-        });
-        this.cd = CALL_DATA
-      
+    sendCall({ CALL_ID, CALL_DATA }) {
+      this.callData_ = CALL_DATA;
+      console.log(this.callData_);
+
+      // Supposedly fixed startHats, courtesy of Gemini!
+      vm.runtime.startHats("unisonKernel_receiveCall", {
+        ID: CALL_ID,
+        DATA: CALL_DATA,
+      });
+      console.log("unisonKernel_receiveCall", {
+        ID: CALL_ID,
+        DATA: CALL_DATA,
+      });
     }
-    callData() {
-      return this.cd;
+    retCallData() {
+      console.log(this.callData_)
+      return this.callData_;
     }
   }
   Scratch.extensions.register(new UnisonKernel());
