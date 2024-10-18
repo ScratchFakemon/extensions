@@ -256,7 +256,7 @@
     }
     listApps() {
       // @ts-ignore
-      return this.apps
+      return "[" + this.apps + "]" //Yes I know the array needs quotation marks around it too bad its in beta
       //return JSON.jsonify(this.apps)
     }
     setOsName({ NAME }) {
