@@ -277,16 +277,11 @@
     sendCall({ CALL_ID, CALL_DATA }) {
       this.callData_ = CALL_DATA;
       console.log(this.callData_);
+      //vm.runtime.startHats("unisonKernel_whenInit", {});
 
-      // Supposedly fixed startHats, courtesy of Gemini!
-      vm.runtime.startHats("unisonKernel_receiveCall", {
-        ID: CALL_ID,
-        DATA: CALL_DATA,
-      });
-      console.log("unisonKernel_receiveCall", {
-        ID: CALL_ID,
-        DATA: CALL_DATA,
-      });
+      // Supposedly fixed startHats, courtesy of Gemini! (Edited by Fakemon)
+      vm.runtime.startHats("unisonKernel_receiveCall",{
+        CALL_ID: CALL_ID,})
     }
     retCallData() {
       console.log(this.callData_)
