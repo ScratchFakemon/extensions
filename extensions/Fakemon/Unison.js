@@ -7,7 +7,7 @@
 // License: MIT <https://opensource.org/license/MIT>
 
 
-(function (Scratch) {
+(function (Scratch, util) {
   "use strict";
 
   if (!Scratch.extensions.unsandboxed) {
@@ -15,7 +15,7 @@
   }
 
   const vm = Scratch.vm;
-  const semver = "1.0.0-beta";
+  const semver = "1.0.0-beta"; // The current version of Unison
 
   class UnisonFileSystem {
     constructor() {
@@ -277,15 +277,14 @@
     sendCall({ CALL_ID, CALL_DATA }) {
       this.callData_ = CALL_DATA;
       console.log(this.callData_);
-      //vm.runtime.startHats("unisonKernel_whenInit", {});
-
-      // Supposedly fixed startHats, courtesy of Gemini! (Edited by Fakemon)
-      vm.runtime.startHats("unisonKernel_receiveCall",{
-        CALL_ID: CALL_ID,})
+      console.log("unisonKernel_receiveCall",{CALL_ID:CALL_ID});
+      this.retCallID = CALL_ID;
+      util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true, util}); // Add util here... WHEN WE FIND OUT HOW LOL
+      
     }
     retCallData() {
       console.log(this.callData_)
-      return this.callData_;
+      return /*this.retCallID + ": " + */this.callData_;
     }
   }
   Scratch.extensions.register(new UnisonKernel());
