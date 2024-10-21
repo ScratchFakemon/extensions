@@ -7,11 +7,11 @@
 // License: MIT <https://opensource.org/license/MIT>
 
 
-(function (Scratch, util) {
+(function (Scratch) {
   "use strict";
 
   if (!Scratch.extensions.unsandboxed) {
-    throw new Error("The Unison kernel must be run unsandboxed!");
+    throw new Error("The Unison Kernel must be run unsandboxed!");
   }
 
   const vm = Scratch.vm;
@@ -274,13 +274,12 @@
     whenAppDeclared({ NAME }) {
       return false; // TODO
     }
-    sendCall({ CALL_ID, CALL_DATA }) {
+    sendCall({ CALL_ID, CALL_DATA }, util) {
       this.callData_ = CALL_DATA;
       console.log(this.callData_);
       console.log("unisonKernel_receiveCall",{CALL_ID:CALL_ID});
       this.retCallID = CALL_ID;
-      util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true, util}); // Add util here... WHEN WE FIND OUT HOW LOL
-      
+     util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true});
     }
     retCallData() {
       console.log(this.callData_)
