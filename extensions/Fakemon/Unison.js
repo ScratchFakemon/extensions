@@ -148,13 +148,13 @@
           {
             opcode: "getOsName",
             blockType: Scratch.BlockType.REPORTER,
-            text: "OS name",
+            text: "os name",
             disableMonitor: true,
           },
           {
             opcode: "setOsName",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set the OS name to [NAME]",
+            text: "set the os name to [NAME]",
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -232,14 +232,14 @@
             text: "received call data",
           },
         ],
-        menus: {
+        /*menus: {
           CALL_IDS: [
             {
               text: "abc",
               value: "def",
             },
           ],
-        },
+        },*/
       };
     }
     semver() {
@@ -256,7 +256,7 @@
     }
     listApps() {
       // @ts-ignore
-      return "[" + this.apps + "]" //Yes I know the array needs quotation marks around it too bad its in beta
+      return "[" + this.apps + "]"
       //return JSON.jsonify(this.apps)
     }
     setOsName({ NAME }) {
@@ -269,21 +269,19 @@
       vm.runtime.startHats("unisonKernel_whenAppDeclared", {
         NAME: NAME
       })
-      this.apps = [...this.apps, NAME];
+      this.apps = [...this.apps, '"'+NAME+'"'];
     }
     whenAppDeclared({ NAME }) {
       return false; // TODO
     }
     sendCall({ CALL_ID, CALL_DATA }, util) {
       this.callData_ = CALL_DATA;
-      console.log(this.callData_);
-      console.log("unisonKernel_receiveCall",{CALL_ID:CALL_ID});
       this.retCallID = CALL_ID;
-     util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true});
+      util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true});
     }
     retCallData() {
       console.log(this.callData_)
-      return /*this.retCallID + ": " + */this.callData_;
+      return this.callData_;
     }
   }
   Scratch.extensions.register(new UnisonKernel());
