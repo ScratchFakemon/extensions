@@ -15,7 +15,7 @@
   }
 
   const vm = Scratch.vm;
-  const semver = "1.0.0-beta"; // The current version of Unison
+  const semver = "1.0.0-beta"; // The current version of Unison.
 
   class UnisonFileSystem {
     constructor() {
@@ -216,7 +216,7 @@
           },
           {
             opcode: "receiveCall",
-            blockType: Scratch.BlockType.EVENT,
+            blockType: Scratch.BlockType.HAT,
             text: "when I receive call [CALL_ID]",
             isEdgeActivated: false,
             arguments: {
@@ -274,14 +274,20 @@
     whenAppDeclared({ NAME }) {
       return false; // TODO
     }
-    sendCall({ CALL_ID, CALL_DATA }, util) {
-      this.callData_ = CALL_DATA;
-      this.retCallID = CALL_ID;
-      util.startHats("unisonKernel_receiveCall",{CALL_ID:CALL_ID,shouldRestartExistingThreads: true});
-    }
+    sendCall(args, util) {
+      this.callData = args.CALL_DATA;
+      this.retCallID = args.CALL_ID;
+      console.log("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
+      console.log(args, util)
+      //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
+      util.startHats("unisonKernel_receiveCall",{shouldRestartExistingThreads: true});
+        }
     retCallData() {
-      console.log(this.callData_)
-      return this.callData_;
+      console.log(this.callData)
+      return this.callData;
+    }
+    reciveCall({ CALL_ID }, util) {
+      return Scratch.Cast.compare(CALL_ID,this.retCallID) === 0;
     }
   }
   Scratch.extensions.register(new UnisonKernel());
