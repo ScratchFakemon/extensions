@@ -219,6 +219,7 @@
             blockType: Scratch.BlockType.HAT,
             text: "when I receive call [CALL_ID]",
             isEdgeActivated: false,
+            shouldRestartExistingThreads: true,
             arguments: {
               CALL_ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -280,7 +281,7 @@
       console.log("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
       console.log(args, util)
       //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
-      util.startHats("unisonKernel_receiveCall",{shouldRestartExistingThreads: true});
+      util.startHats("unisonKernel_receiveCall");
         }
     retCallData() {
       console.log(this.callData)
