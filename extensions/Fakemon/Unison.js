@@ -12,12 +12,18 @@
 
   if (!Scratch.extensions.unsandboxed) {
     throw new Error("The Unison Kernel must be run unsandboxed!");
+    // There HAS to be a way we can show this on screen, RIGHT? ...right? 🧐
+    
   }
 
   const vm = Scratch.vm;
-  const semver = "1.0.0-beta"; // The current version of Unison.
+  let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion.
+  const semver = "1.0.0-" + buildType // The current version of Unison.
+  if (!(buildType == "release")) {
+    alert("This is a " + buildType + " build! There might be bugs...")
 
-  class UnisonFileSystem {
+}
+  class UnisonFileSystem { // Bambus's recycled file system code.
     constructor() {
       this.info = {
         ufs_partition_name: "",
@@ -68,8 +74,7 @@
     }
     // _findObjectInActivePath(filename) {}
     import() { }
-    export() {
-      // @ts-ignore
+    export(JSON) {
       return JSON.jsonify({ ...this.info, content: this._data });
     }
     newFile(path, filename, content) { }
@@ -83,7 +88,7 @@
       this.blocklogo =
         "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0MS40IiBoZWlnaHQ9IjQxLjQiIHZpZXdCb3g9IjAsMCw0MS40LDQxLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTkuMywtMTU5LjMpIj48ZyBmaWxsPSJub25lIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjIwLjY5OTk5OTk5OTk5OTk2OjIwLjY5OTk5OTk5OTk5OTk5LS0+";
       this.isInit = false;
-      this.osName = "";
+      this.osName = ""; //Should we give the OS a placeholder name?
       this.fs = undefined;
       this.callData = undefined;
       this.apps = [];
@@ -99,16 +104,18 @@
         menuIconURI: this.menulogo,
         blockIconURI: this.blocklogo,
         color1: "#fa8033",
-        // color2: "#e3915d",
+        // color2: "#e3915d", // Bambus is mad that color doesn't have a "u" in it. (I'm kidding) - Fakemon
         // color3: "#be5613",
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
         blocks: [
-          {
+          
+
+          /*{
             opcode: "semver",
             blockType: Scratch.BlockType.REPORTER,
             text: "kernel version",
             disableMonitor: true,
-          },
+          }, // MOVED TO OS INFO!
           /*{
             blockType: Scratch.BlockType.LABEL,
             text: "Unison File System",
@@ -162,6 +169,12 @@
               },
             },
           },
+          {
+            opcode: "semver",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "kernel version",
+            disableMonitor: true,
+          }, // MOVED FROM NAMELESS CATEGORY
           {
             blockType: Scratch.BlockType.LABEL,
             text: "Apps",
@@ -218,7 +231,7 @@
             opcode: "receiveCall",
             blockType: Scratch.BlockType.HAT,
             text: "when I receive call [CALL_ID]",
-            isEdgeActivated: false,
+            //isEdgeActivated: false,
             shouldRestartExistingThreads: true,
             arguments: {
               CALL_ID: {
@@ -232,15 +245,17 @@
             blockType: Scratch.BlockType.REPORTER,
             text: "received call data",
           },
+          {
+            opcode: "retCallID",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "latest call id",
+          },
+          {
+            opcode: "retCall",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "latest call",
+          },
         ],
-        /*menus: {
-          CALL_IDS: [
-            {
-              text: "abc",
-              value: "def",
-            },
-          ],
-        },*/
       };
     }
     semver() {
@@ -255,10 +270,10 @@
     reportIsInit() {
       return !!this.isInit;
     }
-    listApps() {
+    listApps(JSON) {
       // @ts-ignore
-      return "[" + this.apps + "]"
-      //return JSON.jsonify(this.apps)
+      return "[" + this.apps + "]" // The apps already have quotes around them. This is just a bad array. - Fakemon, who knows nothing about our precious JavaScript Object Node Arrays.
+      //return JSON.jsonify(this.apps) // Why aren't we using this, you may ask? ... It's broken. Always has been. (I might know how to fix it, but TOO BAD!) - Fakemon
     }
     setOsName({ NAME }) {
       this.osName = NAME;
@@ -277,19 +292,26 @@
     }
     sendCall(args, util) {
       this.callData = args.CALL_DATA;
-      this.retCallID = args.CALL_ID;
+      this.callID = args.CALL_ID;
       console.log("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
       console.log(args, util)
-      //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
-      util.startHats("unisonKernel_receiveCall");
+      //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true}); // Old bad yucky code for starting the hat.
+      util.startHats("unisonKernel_receiveCall"); // New clean shiny code for starting the hat.
         }
     retCallData() {
       console.log(this.callData)
       return this.callData;
     }
-    reciveCall({ CALL_ID }, util) {
-      return Scratch.Cast.compare(CALL_ID,this.retCallID) === 0;
+    retCallID() {
+      console.log(this.callID)
+      return this.callID;}
+    receiveCall({ CALL_ID }) {
+      return Scratch.Cast.compare(CALL_ID,this.callID) === 0;
     }
+    retCall() { // If we can get the ID and Data of a call... (Just trying to help out users ig) - Fakemon :)
+      return this.callID + ":" + this.callData // Looks like ID:Data. I don't think it needs changing.
+    }
+    
   }
   Scratch.extensions.register(new UnisonKernel());
 //@ts-ignore
