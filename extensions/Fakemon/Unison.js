@@ -110,22 +110,7 @@
         blocks: [
           
 
-          /*{
-            opcode: "semver",
-            blockType: Scratch.BlockType.REPORTER,
-            text: "kernel version",
-            disableMonitor: true,
-          }, // MOVED TO OS INFO!
-          /*{
-            blockType: Scratch.BlockType.LABEL,
-            text: "Unison File System",
-          },
-           {
-            blockType: Scratch.BlockType.LABEL,
-            text: "(There's nothing here yet...)",
-          },
-          '---'*/
-          , {
+          {
             blockType: Scratch.BlockType.LABEL,
             text: "Kernel Initialization",
           },
@@ -175,6 +160,84 @@
             text: "kernel version",
             disableMonitor: true,
           }, // MOVED FROM NAMELESS CATEGORY
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: "Unison File System",
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: ("The file system isn't finished yet!"),
+          },
+          {
+            opcode: "makefile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "create a new file named [NAME] with data [DATA]",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+              DATA: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello, world!",
+              }
+            }
+          },
+          {
+            opcode: "delfile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "delete the file named [NAME]",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+            }
+          },
+          {
+            opcode: "editfile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: "edit the contents of [NAME] with new data [DATA]",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+              DATA: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "What's up?",
+              },
+            }
+          },
+          {
+            opcode: "openfile",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "open file [NAME]",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+            }
+          },
+          {
+            opcode: "fileexists",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: "file [NAME] exists?",
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+            }
+          },
+          {
+            opcode: "filesystem",
+            blockType: Scratch.BlockType.REPORTER,
+            text: "file system data",
+            disableMonitor: true,
+          },
+          , 
           {
             blockType: Scratch.BlockType.LABEL,
             text: "Apps",
@@ -271,7 +334,6 @@
       return !!this.isInit;
     }
     listApps(JSON) {
-      // @ts-ignore
       return "[" + this.apps + "]" // The apps already have quotes around them. This is just a bad array. - Fakemon, who knows nothing about our precious JavaScript Object Node Arrays.
       //return JSON.jsonify(this.apps) // Why aren't we using this, you may ask? ... It's broken. Always has been. (I might know how to fix it, but TOO BAD!) - Fakemon
     }
@@ -311,6 +373,25 @@
     retCall() { // If we can get the ID and Data of a call... (Just trying to help out users ig) - Fakemon :)
       return this.callID + ":" + this.callData // Looks like ID:Data. I don't think it needs changing.
     }
+  
+  makefile(args) { 
+    return false; // no file system yet very brokey lol
+  }
+  delfile(args) { 
+    return false; // no file system yet very brokey lol
+  }
+  editfile(args) { 
+    return false; // no file system yet very brokey lol
+  }
+  openfile(args) { 
+    return "Not implemented yet!"; // no file system yet very brokey lol
+  }
+  fileexists(args) { 
+    return false; // no file system yet very brokey lol
+  }
+  filesystem(args) { 
+    return "[]"; // no file system yet very brokey lol
+  }
     
   }
   Scratch.extensions.register(new UnisonKernel());
