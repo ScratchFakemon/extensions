@@ -1,26 +1,52 @@
 // Name: Unison Kernel
 // ID: unisonKernel
-// Description: An operating system kernel, made into its own extension!
-// Documentation: <https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison>
+// Description: Lots of blocks to help you create your own operating systems, packed into one extension!
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
 // By: BambusOS <https://scratch.mit.edu/users/BambusOS/>
 // License: MIT <https://opensource.org/license/MIT>
+/*
+MIT License
 
+Copyright (c) 2024 Scratch_Fakemon and BambusOS
 
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+// Above is the TurboWarp Extension Info header. That makes sure our extension has the right info in the gallery!
+
+// The real code begins here!
 (function (Scratch) {
   "use strict";
 
   if (!Scratch.extensions.unsandboxed) {
     throw new Error("The Unison Kernel must be run unsandboxed!");
-    // There HAS to be a way we can show this on screen, RIGHT? ...right? 🧐
+    // How could we show this on screen?
     
   }
-
   const vm = Scratch.vm;
   let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion.
-  const semver = "1.0.0-" + buildType // The current version of Unison.
+  let buildNum = "1.0.0"
+  const translator = Scratch.translate;
+  const semver = buildNum + "-" + buildType // The current version of Unison.
+  console.log("Unison Kernel: Version " + semver + " loaded successfully!")
+    
   if (!(buildType == "release")) {
-    alert("This is a " + buildType + " build! There might be bugs...")
+    alert(Scratch.translate("This is a " + buildType + " build! There might be bugs..."))
 
 }
   class UnisonFileSystem { // Bambus's recycled file system code.
@@ -80,7 +106,7 @@
     newFile(path, filename, content) { }
     newDirectory(path, filename) { }
   }
-
+  const ufs = UnisonFileSystem;
   class UnisonKernel {
     constructor() {
       this.menulogo =
@@ -100,7 +126,7 @@
     getInfo() {
       return {
         id: "unisonKernel",
-        name: "Unison",
+        name: translator("Unison"),
         menuIconURI: this.menulogo,
         blockIconURI: this.blocklogo,
         color1: "#fa8033",
@@ -112,66 +138,66 @@
 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Kernel Initialization",
+            text: Scratch.translate("Kernel Initialization"),
           },
           {
             opcode: "init",
             blockType: Scratch.BlockType.COMMAND,
-            text: "initialize kernel",
+            text: Scratch.translate("initialize kernel"),
           },
           {
             opcode: "reportIsInit",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "is kernel initialized?",
+            text: Scratch.translate("is kernel initialized?"),
             disableMonitor: true,
           },
           {
             opcode: "whenInit",
             blockType: Scratch.BlockType.EVENT,
-            text: "when the kernel initializes",
+            text: Scratch.translate("when the kernel initializes"),
             isEdgeActivated: false
           },
 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "OS Info",
+            text: Scratch.translate("OS Info"),
           },
 
           {
             opcode: "getOsName",
             blockType: Scratch.BlockType.REPORTER,
-            text: "os name",
+            text: Scratch.translate("os name"),
             disableMonitor: true,
           },
           {
             opcode: "setOsName",
             blockType: Scratch.BlockType.COMMAND,
-            text: "set the os name to [NAME]",
+            text: Scratch.translate("set the os name to [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "os name",
+                defaultValue: Scratch.translate("os name"),
               },
             },
           },
           {
             opcode: "semver",
             blockType: Scratch.BlockType.REPORTER,
-            text: "kernel version",
+            text: Scratch.translate("kernel version"),
             disableMonitor: true,
           }, // MOVED FROM NAMELESS CATEGORY
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Unison File System",
+            text: Scratch.translate("Unison File System"),
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: ("The file system isn't finished yet!"),
+            text: Scratch.translate("(The file system isn't finished yet!)"),
           },
           {
             opcode: "makefile",
             blockType: Scratch.BlockType.COMMAND,
-            text: "create a new file named [NAME] with data [DATA]",
+            text: Scratch.translate("create a new file named [NAME] with data [DATA]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -179,14 +205,14 @@
               },
               DATA: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "Hello, world!",
+                defaultValue: Scratch.translate("Hello, world!"),
               }
             }
           },
           {
             opcode: "delfile",
             blockType: Scratch.BlockType.COMMAND,
-            text: "delete the file named [NAME]",
+            text: Scratch.translate("delete the file named [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -197,7 +223,7 @@
           {
             opcode: "editfile",
             blockType: Scratch.BlockType.COMMAND,
-            text: "edit the contents of [NAME] with new data [DATA]",
+            text: Scratch.translate("edit the contents of [NAME] with new data [DATA]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -205,14 +231,14 @@
               },
               DATA: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "What's up?",
+                defaultValue: Scratch.translate("What's up?"),
               },
             }
           },
           {
             opcode: "openfile",
             blockType: Scratch.BlockType.REPORTER,
-            text: "open file [NAME]",
+            text: Scratch.translate("open file [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -223,7 +249,7 @@
           {
             opcode: "fileexists",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: "file [NAME] exists?",
+            text: Scratch.translate("file [NAME] exists?"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -234,51 +260,51 @@
           {
             opcode: "filesystem",
             blockType: Scratch.BlockType.REPORTER,
-            text: "file system data",
+            text: Scratch.translate("file system data"),
             disableMonitor: true,
           },
           , 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Apps",
+            text: Scratch.translate("Apps"),
           },
           {
             opcode: "listApps",
             blockType: Scratch.BlockType.REPORTER,
-            text: "all installed apps",
+            text: Scratch.translate("all installed apps"),
             disableMonitor: true,
           },
           {
             opcode: "declareApp",
             blockType: Scratch.BlockType.COMMAND,
-            text: "declare an app called [NAME]",
+            text: Scratch.translate("declare an app called [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my-app",
+                defaultValue: Scratch.translate("my-app"),
               }
             }
           },
           {
             opcode: "whenAppDeclared",
             blockType: Scratch.BlockType.EVENT,
-            text: "when app [NAME] gets declared",
+            text: Scratch.translate("when app [NAME] gets declared"),
             isEdgeActivated: false,
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
-                defaultValue: "my-app",
+                defaultValue: Scratch.translate("my-app"),
               }
             }
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: "Calls",
+            text: Scratch.translate("Calls"),
           },
           {
             opcode: "sendCall",
             blockType: Scratch.BlockType.COMMAND,
-            text: "send call with id [CALL_ID] and data [CALL_DATA]",
+            text: Scratch.translate("send call with id [CALL_ID] and data [CALL_DATA]"),
             arguments: {
               CALL_ID: {
                 type: Scratch.ArgumentType.STRING,
@@ -293,7 +319,7 @@
           {
             opcode: "receiveCall",
             blockType: Scratch.BlockType.HAT,
-            text: "when I receive call [CALL_ID]",
+            text: Scratch.translate("when I receive call [CALL_ID]"),
             //isEdgeActivated: false,
             shouldRestartExistingThreads: true,
             arguments: {
@@ -306,20 +332,131 @@
           {
             opcode: "retCallData",
             blockType: Scratch.BlockType.REPORTER,
-            text: "received call data",
+            text: Scratch.translate("received call data"),
           },
           {
             opcode: "retCallID",
             blockType: Scratch.BlockType.REPORTER,
-            text: "latest call id",
+            text: Scratch.translate("latest call id"),
           },
           {
             opcode: "retCall",
             blockType: Scratch.BlockType.REPORTER,
-            text: "latest call",
+            text: Scratch.translate("latest call"),
           },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("Terminal"),
+          },
+          {
+            opcode: "shTerm",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[SH] the terminal"),
+            arguments: {
+              SH: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SH_MENU",
+              },
+              
+            },
+          },
+          {
+            opcode: "exportTerm",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("export the terminal"),
+            disableMonitor: true
+            
+          },
+          {
+            opcode: "addCmd",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[DO] the [CMD] command"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              DO: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "DO_MENU",
+              },
+              
+            },
+            
+            
+          },
+          {
+            opcode: "cmdRun",
+            blockType: Scratch.BlockType.EVENT,
+            text: Scratch.translate("when [CMD] is run"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              
+            },
+            
+            
+          },
+          {
+            opcode: "allCmds",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("all terminal commands"),
+            disableMonitor: true
+            
+          },
+          {
+            opcode: "termLine",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("line [LNUM] of terminal"),
+            arguments: {
+              LNUM: {
+                type: Scratch.ArgumentType.NUMBER,
+                defaultValue: "1",
+              },
+            }
+            
+          },
+          
+
+
         ],
+        menus: {
+          SH_MENU: {
+            acceptReporters: false,
+            items: [
+              {
+                text: 'show',
+                value: 'show'
+              },
+              {
+                text: 'hide',
+                value: 'hide'
+              }
+              
+            ]
+          },
+          DO_MENU: {
+            acceptReporters: false,
+            items: [
+              {
+                text: 'add',
+                value: 'add'
+              },
+              {
+                text: 'remove',
+                value: 'rem'
+              }
+              
+            ]
+          },
+          
+          
+        }
+        
       };
+      
     }
     semver() {
       return semver;
@@ -391,6 +528,21 @@
   }
   filesystem(args) { 
     return "[]"; // no file system yet very brokey lol
+  }
+  shTerm(args) { 
+    return false; // TO DO
+  }
+  exportTerm(args) { 
+    return "No"; // TO DO
+  }
+  addCmd(args) { 
+    return false; // TO DO
+  }
+  allCmds(args) { 
+    return "No"; // TO DO
+  }
+  termLine(args) { 
+    return "No"; // TO DO
   }
     
   }
