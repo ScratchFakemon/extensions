@@ -458,6 +458,45 @@ SOFTWARE.
             disableMonitor: true
             
           },
+          {
+            opcode: "setIcon",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set terminal icon to [ICON]"),
+            arguments: {
+              ICON: {
+                type: Scratch.ArgumentType.MATRIX,
+                defaultValue: "0101001010010100111000001",
+              },
+              
+            },
+            
+          },
+          {
+            opcode: "setIconCostume",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set terminal icon to [ICON]"),
+            arguments: {
+              ICON: {
+                type: Scratch.ArgumentType.COSTUME,
+                //defaultValue: "",
+              },
+              
+            },
+            
+          },
+          {
+            opcode: "setColor",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set text color to [COLOR]"),
+            arguments: {
+              COLOR: {
+                type: Scratch.ArgumentType.COLOR,
+                defaultValue: "#ffffff",
+              },
+              
+            },
+            
+          },
           
          
          
@@ -624,6 +663,21 @@ SOFTWARE.
   }
   termShown(args) { 
     return false; // TO DO
+  }
+  setIcon(args) { 
+    let terminalIcon = "Matrix: " + args.ICON;
+    console.log("Terminal icon set to " + terminalIcon)
+    return;
+  }
+  setIconCostume(args) { 
+    let terminalIcon = "Costume: " + args.ICON;
+    console.log("Terminal icon set to " + terminalIcon)
+    return;
+  }
+  setColor(args) { 
+    let terminalColor = args.COLOR;
+    console.log("Terminal color set to " + terminalColor)
+    return;
   }
     
   }
