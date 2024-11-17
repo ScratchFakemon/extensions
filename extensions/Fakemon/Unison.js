@@ -547,5 +547,4 @@ SOFTWARE.
     
   }
   Scratch.extensions.register(new UnisonKernel());
-//@ts-ignore
 })(Scratch);
