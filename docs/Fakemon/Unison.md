@@ -1,15 +1,11 @@
 # Unison Kernel
+## THIS DOCUMENTATION IS UNFINISHED!
 
 Unison is a kernel for Scratch that lets you do a lot of under-the-hood things without having to look through the messy spaghetti code of a normal Scratch kernel.
 
 It's fully baked into the extension, so you don't need to mess with much!
 
 Here are all the blocks and what they do:
-## General
-
-```scratch
-(kernel version :: #fa8033) //Reports the version of Unison being used
-```
 ## Kernel Initialization
 
 ```scratch
@@ -21,6 +17,7 @@ when the kernel initializes :: #fa8033 :: hat //Runs when initialize kernel is r
 ```scratch
 OS name :: #fa8033 :: reporter // Reports the set OS (operating system) name
 set the OS name to [os name] :: #fa8033 // Changes the name that OS name reports
+(kernel version :: #fa8033) //Reports the version of Unison being used
 ```
 
 ## Syscalls
