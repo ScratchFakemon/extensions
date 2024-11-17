@@ -188,11 +188,7 @@ SOFTWARE.
           }, // MOVED FROM NAMELESS CATEGORY
           {
             blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("Unison File System"),
-          },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("(The file system isn't finished yet!)"),
+            text: Scratch.translate("File System (WIP)"),
           },
           {
             opcode: "makefile",
@@ -346,7 +342,7 @@ SOFTWARE.
           },
           {
             blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("Terminal"),
+            text: Scratch.translate("Terminal (WIP)"),
           },
           {
             opcode: "shTerm",
@@ -361,48 +357,23 @@ SOFTWARE.
             },
           },
           {
+            opcode: "termShown",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: Scratch.translate("terminal is [SH2]"),
+            arguments: {
+              SH2: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SH2_MENU",
+              },
+              
+            },
+            
+            
+          },
+          {
             opcode: "exportTerm",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("export the terminal"),
-            disableMonitor: true
-            
-          },
-          {
-            opcode: "addCmd",
-            blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("[DO] the [CMD] command"),
-            arguments: {
-              CMD: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              DO: {
-                type: Scratch.ArgumentType.STRING,
-                menu: "DO_MENU",
-              },
-              
-            },
-            
-            
-          },
-          {
-            opcode: "cmdRun",
-            blockType: Scratch.BlockType.EVENT,
-            text: Scratch.translate("when [CMD] is run"),
-            arguments: {
-              CMD: {
-                type: Scratch.ArgumentType.STRING,
-                defaultValue: "",
-              },
-              
-            },
-            
-            
-          },
-          {
-            opcode: "allCmds",
-            blockType: Scratch.BlockType.REPORTER,
-            text: Scratch.translate("all terminal commands"),
             disableMonitor: true
             
           },
@@ -418,6 +389,78 @@ SOFTWARE.
             }
             
           },
+          {
+            opcode: "addCmd",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[DO] the [CMD] command"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "hello",
+              },
+              DO: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "DO_MENU",
+              },
+              
+            },
+            
+            
+          },
+          {
+            opcode: "cmdExists",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: Scratch.translate("command named [CMD] [EXIST]"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "hello",
+              },
+              EXIST: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "EXISTS_MENU",
+              },
+              
+            },
+            
+            
+          },
+          {
+            opcode: "forceRunCmd",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("run command [CMD]"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "hello",
+              },
+            }
+            
+          },
+          {
+            opcode: "cmdRun",
+            blockType: Scratch.BlockType.EVENT,
+            text: Scratch.translate("when [CMD] is run"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "hello",
+              },
+              
+            },
+            
+            
+          },
+          {
+            opcode: "allCmds",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("all terminal commands"),
+            disableMonitor: true
+            
+          },
+          
+         
+         
           
 
 
@@ -451,6 +494,35 @@ SOFTWARE.
               
             ]
           },
+          EXISTS_MENU: {
+            acceptReporters: false,
+            items: [
+              {
+                text: 'exists',
+                value: 'does'
+              },
+              {
+                text: "doesn't exist",
+                value: 'doesnt'
+              }
+              
+            ]
+          },
+          SH2_MENU: {
+            acceptReporters: false,
+            items: [
+              {
+                text: 'shown',
+                value: 'show'
+              },
+              {
+                text: 'hidden',
+                value: 'hide'
+              }
+              
+            ]
+          },
+          
           
           
         }
@@ -543,6 +615,15 @@ SOFTWARE.
   }
   termLine(args) { 
     return "No"; // TO DO
+  }
+  forceRunCmd(args) { 
+    return false; // TO DO
+  }
+  cmdExists(args) { 
+    return false; // TO DO
+  }
+  termShown(args) { 
+    return false; // TO DO
   }
     
   }
