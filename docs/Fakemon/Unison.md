@@ -42,7 +42,7 @@ declare an app called [my-app] ::#fa8033 // Declares an app so it can be used
 when app [my-app] is declared ::#fa8033 :: hat //Runs when an app is declared
 ```
 ## Calls
-#### Note: Call IDs and data can be in any format
+### Note: Call IDs and data can be in any format
 
 ```scratch
 send syscall with id [foo] and data [bar] :: #fa8033 // Sends a call with an ID and data
