@@ -217,6 +217,11 @@ SOFTWARE.
             }
           },
           {
+            opcode: "wipeFs",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("wipe the file system"),
+          },
+          {
             opcode: "editfile",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("edit the contents of [NAME] with new data [DATA]"),
@@ -628,6 +633,9 @@ SOFTWARE.
   delfile(args) { 
     return false; // no file system yet very brokey lol
   }
+  wipeFs(args) { 
+    return false; // no file system yet very brokey lol
+  }
   editfile(args) { 
     return false; // no file system yet very brokey lol
   }
@@ -644,16 +652,16 @@ SOFTWARE.
     return false; // TO DO
   }
   exportTerm(args) { 
-    return "No"; // TO DO
+    return "Not implemented yet!"; // TO DO
   }
   addCmd(args) { 
     return false; // TO DO
   }
   allCmds(args) { 
-    return "No"; // TO DO
+    return "Not implemented yet!"; // TO DO
   }
   termLine(args) { 
-    return "No"; // TO DO
+    return "Not implemented yet!"; // TO DO
   }
   forceRunCmd(args) { 
     return false; // TO DO
