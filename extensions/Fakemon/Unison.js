@@ -39,8 +39,8 @@ SOFTWARE.
     
   }
   const vm = Scratch.vm;
-  let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion.
-  let buildNum = "1.0.0"
+  let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion, especially if you don't change any branding.
+  let buildNum = "1.0.0" // The current number of the build. (1.0.0, 2.0.4, 3.5.9, etc.) Unofficial builds should keep the build number the same as the base build.
   const translator = Scratch.translate;
   const semver = buildNum + "-" + buildType // The current version of Unison.
   console.log("Unison Kernel: Version " + semver + " loaded successfully!")
@@ -131,7 +131,7 @@ SOFTWARE.
         blockIconURI: this.blocklogo,
         color1: "#fa8033",
         // color2: "#e3915d", // Bambus is mad that color doesn't have a "u" in it. (I'm kidding) - Fakemon
-        // color3: "#be5613",
+        // color3: "#be5613", // Apparently TW is supposed to fill in the colors for you ¯\_(ツ)_/¯
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
         blocks: [
           
