@@ -41,7 +41,7 @@ SOFTWARE.
   const vm = Scratch.vm;
   let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion, especially if you don't change any branding.
   let buildNum = "1.0.0" // The current number of the build. (1.0.0, 2.0.4, 3.5.9, etc.) Unofficial builds should keep the build number the same as the base build.
-  const translator = Scratch.translate;
+  const translator = Scratch.translate; // An easier way to translate text.
   const semver = buildNum + "-" + buildType // The current version of Unison.
   console.log("Unison Kernel: Version " + semver + " loaded successfully!")
     
@@ -502,6 +502,85 @@ SOFTWARE.
             },
             
           },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("Accounts (WIP)"),
+          },
+          {
+            opcode: "addAcc",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[DO] the account [ACC] with password [PASS]"),
+            arguments: {
+              ACC: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "User",
+              },
+              PASS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              DO: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "DO_MENU",
+              },
+              
+            },
+            
+          },
+          {
+            opcode: "allAccs",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("all accounts"),
+            
+          },
+          {
+            opcode: "login",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("log into the account [ACC] with password [PASS]"),
+            arguments: {
+              ACC: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "User",
+              },
+              PASS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "",
+              },
+              
+            },
+            
+          },
+          {
+            opcode: "logout",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("log out of account"),
+          },
+          {
+            opcode: "currentAcc",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("current account"),
+            
+          },
+          {
+            opcode: "updateAcc",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("update [ACC] to username [ACCNEW] with password [PASS]"),
+            arguments: {
+              ACC: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "User",
+              },
+              ACCNEW: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Foo",
+              },
+              PASS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Bar",
+              },
+              
+            },
+          },
           
          
          
@@ -509,7 +588,7 @@ SOFTWARE.
 
 
         ],
-        menus: {
+        menus: { // These are all the menus that can be used by any block. Feel free to add your own :)
           SH_MENU: {
             acceptReporters: false,
             items: [
@@ -610,8 +689,8 @@ SOFTWARE.
       this.callID = args.CALL_ID;
       console.log("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
       console.log(args, util)
-      //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true}); // Old bad yucky code for starting the hat.
-      util.startHats("unisonKernel_receiveCall"); // New clean shiny code for starting the hat.
+      //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true}); // Old bad yucky code for starting the hat. 🤮
+      util.startHats("unisonKernel_receiveCall"); // New clean shiny code for starting the hat. 😍
         }
     retCallData() {
       console.log(this.callData)
@@ -687,7 +766,26 @@ SOFTWARE.
     console.log("Terminal color set to " + terminalColor)
     return;
   }
+  addAcc(args) { 
+    return;
+  }
+  allAccs(args) { 
+    return "Nope";
+  }
+  login(args) { 
+    return;
+  }
+  logout(args) { 
+    return;
+  }
+  currentAcc(args) { 
+    return "Nope";
+  }
+  updateAcc(args) { 
+    return;
+  }
     
   }
   Scratch.extensions.register(new UnisonKernel());
-})(Scratch);
+})(Scratch); // 99.999% of Unison is copied and pasted from somewhere else. Usually the tutorials. Or other parts of the code.
+// And still, it's SO LONG T_T
