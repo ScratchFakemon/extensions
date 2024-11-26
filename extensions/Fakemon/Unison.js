@@ -32,10 +32,10 @@ SOFTWARE.
 // The real code begins here!
 (function (Scratch) {
   "use strict";
-
   if (!Scratch.extensions.unsandboxed) {
     throw new Error("The Unison Kernel must be run unsandboxed!");
     // How could we show this on screen?
+    // Sandboxed extensions can't use alert modals...
     
   }
   const vm = Scratch.vm;
@@ -114,7 +114,7 @@ SOFTWARE.
       this.blocklogo =
         "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI0MS40IiBoZWlnaHQ9IjQxLjQiIHZpZXdCb3g9IjAsMCw0MS40LDQxLjQiPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0yMTkuMywtMTU5LjMpIj48ZyBmaWxsPSJub25lIiBzdHJva2UtbWl0ZXJsaW1pdD0iMTAiPjxwYXRoIGQ9Ik0yMTkuMywxODBjMCwtMTEuNDMyMjkgOS4yNjc3MSwtMjAuNyAyMC43LC0yMC43YzExLjQzMjI5LDAgMjAuNyw5LjI2NzcxIDIwLjcsMjAuN2MwLDExLjQzMjI5IC05LjI2NzcxLDIwLjcgLTIwLjcsMjAuN2MtMTEuNDMyMjksMCAtMjAuNywtOS4yNjc3MSAtMjAuNywtMjAuN3oiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIwIiBzdHJva2UtbGluZWNhcD0iYnV0dCIvPjxwYXRoIGQ9Ik0yNDcuNzcxMDEsMTY3LjI5NDE4bC0zLjQyMDgsMjAuMTU4M2MwLDAgLTEuMjUzMDksNC41MjAzNSAtNy41NzQ2Myw0LjUyMDM1Yy01LjI4MzA5LDAgLTUuOTg2NCwtNC41MjAzNSAtNS45ODY0LC00LjUyMDM1bDMuNDIwOCwtMjAuMTU4MyIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yNDkuMjM3MDcsMTkyLjcwNTg1YzAsMCAtMS4zNjQ4NywwLjE1MjQgLTMuNjE1ODcsLTEuOTA2NThjLTEuNjQzNDEsLTEuNTAzMiAtMC45MDQ0OCwtNC45MzUwMiAtMC45MDQ0OCwtNC45MzUwMiIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utd2lkdGg9IjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjwvZz48L2c+PC9zdmc+PCEtLXJvdGF0aW9uQ2VudGVyOjIwLjY5OTk5OTk5OTk5OTk2OjIwLjY5OTk5OTk5OTk5OTk5LS0+";
       this.isInit = false;
-      this.osName = ""; //Should we give the OS a placeholder name?
+      this.osName = "os name";
       this.fs = undefined;
       this.callData = undefined;
       this.apps = [];
@@ -124,6 +124,7 @@ SOFTWARE.
     }
 
     getInfo() {
+      // Extension Info
       return {
         id: "unisonKernel",
         name: translator("Unison"),
@@ -133,6 +134,7 @@ SOFTWARE.
         // color2: "#e3915d", // Bambus is mad that color doesn't have a "u" in it. (I'm kidding) - Fakemon
         // color3: "#be5613", // Apparently TW is supposed to fill in the colors for you ¯\_(ツ)_/¯
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
+        // Blocks
         blocks: [
           
 
@@ -278,23 +280,31 @@ SOFTWARE.
           {
             opcode: "declareApp",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("declare an app called [NAME]"),
+            text: Scratch.translate("declare a/an [APPTYPE] called [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: Scratch.translate("my-app"),
+              },
+              APPTYPE: {
+                type: Scratch.ArgumentType.STRING,
+               menu: "AT_MENU"
               }
             }
           },
           {
             opcode: "whenAppDeclared",
             blockType: Scratch.BlockType.EVENT,
-            text: Scratch.translate("when app [NAME] gets declared"),
+            text: Scratch.translate("when [APPTYPE] [NAME] gets declared"),
             isEdgeActivated: false,
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: Scratch.translate("my-app"),
+              },
+              APPTYPE: {
+                type: Scratch.ArgumentType.STRING,
+               menu: "AT_MENU"
               }
             }
           },
@@ -457,6 +467,11 @@ SOFTWARE.
             
           },
           {
+            opcode: "cancelCmd",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("cancel currently running commands")
+          },
+          {
             opcode: "allCmds",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("all terminal commands"),
@@ -581,6 +596,62 @@ SOFTWARE.
               
             },
           },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("Boot Manager"),
+          },
+          {
+            opcode: "shBoot",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[SH] boot manager"),
+            arguments: {
+              SH: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "SH_MENU",
+              },
+              
+            },
+          },
+          {
+            opcode: "addBoot",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[DO] boot option [OPTION]"),
+            arguments: {
+              DO: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "DO_MENU",
+              },
+              OPTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: this.osName,
+              },
+              
+            },
+          },
+          {
+            opcode: "onBoot",
+            blockType: Scratch.BlockType.EVENT,
+            text: Scratch.translate("when [OPTION] selected"),
+            arguments: {
+              OPTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: this.osName,
+              },
+              
+            },
+          },
+          {
+            opcode: "autoBoot",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("boot into [OPTION]"),
+            arguments: {
+              OPTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: this.osName,
+              },
+              
+            },
+          },
           
          
          
@@ -588,7 +659,8 @@ SOFTWARE.
 
 
         ],
-        menus: { // These are all the menus that can be used by any block. Feel free to add your own :)
+        // Menus
+        menus: {
           SH_MENU: {
             acceptReporters: false,
             items: [
@@ -645,13 +717,44 @@ SOFTWARE.
               
             ]
           },
+          AT_MENU: {
+            acceptReporters: true,
+            items: [
+              {
+                text: 'app',
+                value: 'app'
+              },
+              {
+                text: 'addon',
+                value: 'add'
+              },
+              {
+                text: 'object',
+                value: 'obj'
+              },
+              {
+                text: 'parent',
+                value: 'par'
+              },
+              {
+                text: 'child',
+                value: 'chi'
+              },
+
+              { // Other should ALWAYS be the last option.
+                text: 'other',
+                value: 'oth'
+              },
+              
+            ]
+          },
           
           
           
         }
         
       };
-      
+      // Block Definitions
     }
     semver() {
       return semver;
@@ -679,7 +782,7 @@ SOFTWARE.
       vm.runtime.startHats("unisonKernel_whenAppDeclared", {
         NAME: NAME
       })
-      this.apps = [...this.apps, '"'+NAME+'"'];
+      this.apps = [...this.apps, '"'+ NAME +'"'];
     }
     whenAppDeclared({ NAME }) {
       return false; // TODO
@@ -784,8 +887,19 @@ SOFTWARE.
   updateAcc(args) { 
     return;
   }
+  shBoot(args) { 
+    return;
+  }
+  addBoot(args) { 
+    return;
+  }
+  autoBoot(args) { 
+    return;
+  }
+  cancelCmd(args) { 
+    return;
+  }
     
   }
   Scratch.extensions.register(new UnisonKernel());
-})(Scratch); // 99.999% of Unison is copied and pasted from somewhere else. Usually the tutorials. Or other parts of the code.
-// And still, it's SO LONG T_T
+})(Scratch);
