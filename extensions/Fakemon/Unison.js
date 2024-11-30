@@ -72,9 +72,9 @@ SOFTWARE.
       let splitPath = path.split("/"); // the first index will always be blank
       let files = this._data;
       let dir = "";
-      let i = 1;
-      let j = 0;
-      let k = 0;
+      let i = 1; // i'm
+      let j = 0; // just
+      let k = 0; // kidding
       // i'm sorry for subjecting you to this (i didn't want it to use recursion)
       // -BambusOS
       // This is what happens when you look at Bambus's messy code LOL
@@ -120,6 +120,8 @@ SOFTWARE.
       this.apps = [];
       vm.on("PROJECT_START", () => {
         this.apps = [];
+        let isDebugging;
+        isDebugging = false;
       })
     }
 
@@ -629,6 +631,29 @@ SOFTWARE.
             },
           },
           {
+            opcode: "bootReg",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: Scratch.translate("is [OPTION] registered?"),
+            arguments: {
+              OPTION: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: this.osName,
+              },
+              
+            },
+          },
+          {
+            opcode: "allReg",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("all registered options"),
+            arguments: {
+              YOUR_MUM: { // I'm American and I still put mum. YOU CANT STOP MEEEEEEEEEEEE--  (Fakemon)
+                type: "1 diabetes", // That's what she said
+                defaultValue: "You're grounded!" // That's ALSO what she said
+              }
+            }
+          },
+          {
             opcode: "onBoot",
             blockType: Scratch.BlockType.EVENT,
             text: Scratch.translate("when [OPTION] selected"),
@@ -652,7 +677,44 @@ SOFTWARE.
               
             },
           },
-          
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("Debugging"),
+          },
+          {
+            opcode: "debugStart",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[THING] debugging"),
+            arguments: {
+              THING: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "STARTSTOP_MENU"
+              },
+              
+            },
+          },
+          {
+            opcode: "debugState",
+            blockType: Scratch.BlockType.BOOLEAN,
+            text: Scratch.translate("is in debug mode?"),
+          },
+          {
+            opcode: "debugLogs",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("debug logs"),
+          },
+          {
+            opcode: "runDebugCommand",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("run debug command [CMD]"),
+            arguments: {
+              CMD: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "greenFlag",
+              },
+              
+            },
+          },
          
          
           
@@ -713,6 +775,20 @@ SOFTWARE.
               {
                 text: 'hidden',
                 value: 'hide'
+              }
+              
+            ]
+          },
+          STARTSTOP_MENU: {
+            acceptReporters: false,
+            items: [
+              {
+                text: 'start',
+                value: 'start'
+              },
+              {
+                text: 'stop',
+                value: 'stop'
               }
               
             ]
@@ -803,10 +879,10 @@ SOFTWARE.
       console.log(this.callID)
       return this.callID;}
     receiveCall({ CALL_ID }) {
-      return Scratch.Cast.compare(CALL_ID,this.callID) === 0;
+      return Scratch.Cast.compare(CALL_ID, this.callID) === 0;
     }
     retCall() { // If we can get the ID and Data of a call... (Just trying to help out users ig) - Fakemon :)
-      return this.callID + ":" + this.callData // Looks like ID:Data. I don't think it needs changing.
+      return this.callID + ":" + this.callData // Looks like ID:Data. I don't think it needs changing. :P
     }
   
   makefile(args) { 
@@ -899,6 +975,25 @@ SOFTWARE.
   cancelCmd(args) { 
     return;
   }
+  debugStart(args) { 
+    return;
+  }
+debugState(args) { 
+return false;
+}
+debugLogs(args) { 
+  return "Not ready yet :P";
+  }
+  bootReg(args) { 
+    console.log (Scratch.Cast.toBoolean(args.OPTION));
+    return Scratch.Cast.toBoolean(args.OPTION);
+    }
+    allReg(args) { 
+      return 'Scratch.translate("Nie") for me, will ya?' // H U M O R
+      }
+      runDebugCommand(args) { 
+        return args.CMD; // It's a command so it won't return anything. I was just ~~le bored~~
+        }
     
   }
   Scratch.extensions.register(new UnisonKernel());
