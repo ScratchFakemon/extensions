@@ -28,7 +28,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 // Above is the TurboWarp Extension Info header. That makes sure our extension has the right info in the gallery!
-
 // The real code begins here!
 (function (Scratch) {
   "use strict";
@@ -507,6 +506,19 @@ SOFTWARE.
             
           },
           {
+            opcode: "setIconURI",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("set terminal icon to [ICON]"),
+            arguments: {
+              ICON: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "https://extensions.turbowarp.org/dango.png",
+              },
+              
+            },
+            
+          },
+          {
             opcode: "setColor",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("set text color to [COLOR]"),
@@ -678,6 +690,18 @@ SOFTWARE.
             },
           },
           {
+            opcode: "bootMgrStyle",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("use [STYLE] boot manager"),
+            arguments: {
+              STYLE: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "BOOTMGRSTYLE_MENU",
+              },
+              
+            },
+          },
+          {
             blockType: Scratch.BlockType.LABEL,
             text: Scratch.translate("Debugging"),
           },
@@ -715,6 +739,15 @@ SOFTWARE.
               
             },
           },
+         /* {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("Other"),    
+          },
+          {
+            blockType: Scratch.BlockType.LABEL,
+            text: Scratch.translate("(Nothing here yet LOL)"),    
+          }, */
+          
          
          
           
@@ -816,6 +849,14 @@ SOFTWARE.
                 text: 'child',
                 value: 'chi'
               },
+              {
+                text: 'extension',
+                value: 'ext'
+              },
+              {
+                text: 'subkernel',
+                value: 'subkern'
+              },
 
               { // Other should ALWAYS be the last option.
                 text: 'other',
@@ -823,6 +864,10 @@ SOFTWARE.
               },
               
             ]
+          },
+          BOOTMGRSTYLE_MENU: {
+            acceptReporters: true,
+            items: ["graphical", "terminal"]
           },
           
           
@@ -994,6 +1039,14 @@ debugLogs(args) {
       runDebugCommand(args) { 
         return args.CMD; // It's a command so it won't return anything. I was just ~~le bored~~
         }
+        bootMgrStyle(args) { 
+          return true;
+          }
+          setIconURI(args) { 
+            let terminalIcon = "URI: " + args.ICON;
+    console.log("Terminal icon set to " + terminalIcon)
+    return;
+            }
     
   }
   Scratch.extensions.register(new UnisonKernel());
