@@ -4,29 +4,6 @@
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
 // By: BambusOS <https://scratch.mit.edu/users/BambusOS/>
 // License: MIT <https://opensource.org/license/MIT>
-/*
-MIT License
-
-Copyright (c) 2024 Scratch_Fakemon and BambusOS
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-*/
 // Above is the TurboWarp Extension Info header. That makes sure our extension has the right info in the gallery!
 // The real code begins here!
 (function (Scratch) {
@@ -50,54 +27,14 @@ SOFTWARE.
 }
   class UnisonFileSystem { // Bambus's recycled file system code.
     constructor() {
-      this.info = {
+      this.fsDat = {
         ufs_partition_name: "",
         ufs_partition_id: "",
         ufs_partition_version: 1,
         ufs_build: semver,
         root: true,
       };
-      this._data = {};
-      this._file = {
-        filename: "",
-        permissions: 1,
-        folder: undefined,
-        content: undefined,
-      };
-      this.activePath = "/";
     }
-    _addObjectAbs(path, permissions, folder, content) { }
-    _findObjectAbs(path) {
-      let splitPath = path.split("/"); // the first index will always be blank
-      let files = this._data;
-      let dir = "";
-      let i = 1; // i'm
-      let j = 0; // just
-      let k = 0; // kidding
-      // i'm sorry for subjecting you to this (i didn't want it to use recursion)
-      // -BambusOS
-      // This is what happens when you look at Bambus's messy code LOL
-      // -Scratch_Fakemon :)
-      // @ts-ignore
-      while (!(path === dir || dir.length() > path.length())) {
-        // @ts-ignore
-        for (i = 1; i < Object.keys(files).length(); i++) {
-          if (`${path}/`.includes(`${dir}/${files[i]}/`)) {
-            dir = `${dir}/${files[i].filename}`;
-            j = i;
-            if (
-              files[i].folder || files[i].root &&
-              path !== dir
-            ) {
-              files = files[i].content;
-            }
-          }
-        }
-        k++;
-      }
-      return files[j];
-    }
-    // _findObjectInActivePath(filename) {}
     import() { }
     export(JSON) {
       return JSON.jsonify({ ...this.info, content: this._data });
@@ -123,7 +60,7 @@ SOFTWARE.
         isDebugging = false;
       })
     }
-
+ // why turn of debbf debgbugging on stasrestartup? -Bambus
     getInfo() {
       // Extension Info
       return {
@@ -132,8 +69,6 @@ SOFTWARE.
         menuIconURI: this.menulogo,
         blockIconURI: this.blocklogo,
         color1: "#fa8033",
-        // color2: "#e3915d", // Bambus is mad that color doesn't have a "u" in it. (I'm kidding) - Fakemon
-        // color3: "#be5613", // Apparently TW is supposed to fill in the colors for you ¯\_(ツ)_/¯
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
         // Blocks
         blocks: [
@@ -163,7 +98,7 @@ SOFTWARE.
 
           {
             blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("OS Info"),
+            text: Scratch.translate("OS & Kernel Info"),
           },
 
           {
@@ -482,7 +417,7 @@ SOFTWARE.
           {
             opcode: "setIcon",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("set terminal icon to [ICON]"),
+            text: Scratch.translate("set terminal icon to drawing [ICON]"),
             arguments: {
               ICON: {
                 type: Scratch.ArgumentType.MATRIX,
@@ -495,7 +430,7 @@ SOFTWARE.
           {
             opcode: "setIconCostume",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("set terminal icon to [ICON]"),
+            text: Scratch.translate("set terminal icon to costume [ICON]"),
             arguments: {
               ICON: {
                 type: Scratch.ArgumentType.COSTUME,
@@ -508,7 +443,7 @@ SOFTWARE.
           {
             opcode: "setIconURI",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("set terminal icon to [ICON]"),
+            text: Scratch.translate("set terminal icon to url [ICON]"),
             arguments: {
               ICON: {
                 type: Scratch.ArgumentType.STRING,
@@ -645,11 +580,15 @@ SOFTWARE.
           {
             opcode: "bootReg",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: Scratch.translate("is [OPTION] registered?"),
+            text: Scratch.translate("is [OPTION] [REGISTER]?"),
             arguments: {
               OPTION: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: this.osName,
+              },
+              REGISTER: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "REGISTER_STATUS",
               },
               
             },
@@ -738,20 +677,8 @@ SOFTWARE.
               },
               
             },
-          },
-         /* {
-            blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("Other"),    
-          },
-          {
-            blockType: Scratch.BlockType.LABEL,
-            text: Scratch.translate("(Nothing here yet LOL)"),    
-          }, */
+          }
           
-         
-         
-          
-
 
         ],
         // Menus
@@ -868,6 +795,10 @@ SOFTWARE.
           BOOTMGRSTYLE_MENU: {
             acceptReporters: true,
             items: ["graphical", "terminal"]
+          },
+          REGISTER_STATUS: {
+            acceptReporters: true,
+            items: ["registered", "unregistered"]
           },
           
           
@@ -1034,7 +965,7 @@ debugLogs(args) {
     return Scratch.Cast.toBoolean(args.OPTION);
     }
     allReg(args) { 
-      return 'Scratch.translate("Nie") for me, will ya?' // H U M O R
+      return "no " + "way"
       }
       runDebugCommand(args) { 
         return args.CMD; // It's a command so it won't return anything. I was just ~~le bored~~
