@@ -4,45 +4,142 @@
 // By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
 // By: BambusOS <https://scratch.mit.edu/users/BambusOS/>
 // License: MIT <https://opensource.org/license/MIT>
-// Above is the TurboWarp Extension Info header. That makes sure our extension has the right info in the gallery!
-// The real code begins here!
+
 (function (Scratch) {
   "use strict";
   if (!Scratch.extensions.unsandboxed) {
-    throw new Error("The Unison Kernel must be run unsandboxed!");
-    // How could we show this on screen?
-    // Sandboxed extensions can't use alert modals...
-    
+    throw new Error("Unison Kernel must be run unsandboxed!");
   }
   const vm = Scratch.vm;
-  let buildType = "beta" // The type of build. (release, alpha, beta, pre, etc.) Unofficial builds should add "-custom" to the end to avoid confusion, especially if you don't change any branding.
-  let buildNum = "1.0.0" // The current number of the build. (1.0.0, 2.0.4, 3.5.9, etc.) Unofficial builds should keep the build number the same as the base build.
+
+  // The type of build. (release, alpha, beta, pre, etc.) 
+  // Unofficial builds should add "-custom" to the end to avoid confusion, especially if you don't change any branding.
+  let buildType = "beta"
+
+  // The current number of the build. (1.0.0, 2.0.4, 3.5.9, etc.)
+  // Unofficial builds should keep the build number the same as the base build.
+  let buildNum = "1.0.0"
+
+  // Debugging flag - if set to true, messages will be sent to the JavaScript console
+  let debug = false;
+
+  // The current version of Unison.
+  const semver = `${buildNum}-${buildType}`
+
   const translator = Scratch.translate; // An easier way to translate text.
-  const semver = buildNum + "-" + buildType // The current version of Unison.
   console.log("Unison Kernel: Version " + semver + " loaded successfully!")
-    
   if (!(buildType == "release")) {
     alert(Scratch.translate("This is a " + buildType + " build! There might be bugs..."))
 
-}
-  class UnisonFileSystem { // Bambus's recycled file system code.
+  }
+
+  class UnisonFileSystem {
     constructor() {
-      this.fsDat = {
-        ufs_partition_name: "",
-        ufs_partition_id: "",
-        ufs_partition_version: 1,
-        ufs_build: semver,
-        root: true,
+      this.fsMetadata = {
+        partitionName: "",
+        partitionId: "",
+        mcfdVersion: 2,
+        build: semver,
+      };
+
+      this.fsContent = [
+        { root: true, 
+          id: "root",
+           content: [] }
+      ];
+
+      this.error = {
+        ok: "Object is OK!",
+        notFound: "Object not found!",
+        notAllowed: "Access to object is denied!",
+        corrupted: "Object is corrupted!",
+        other: "Error not specified."
+      };
+
+      this.objectTypes = {
+        other: 0,
+        file: 1,
+        folder: 2,
+        directory: 2,
+        dir: 2,
+        link: 3,
+        symlink: 3
+      };
+
+      this.blankObjects = {
+        file: {
+          name: "",
+          type: this.objectTypes.file,
+          id: "",
+          parent: "",
+          content: ""
+        },
+        folder: {
+          name: "",
+          type: this.objectTypes.folder,
+          id: "",
+          parent: "",
+          content: []
+        },
+        link: {
+          name: "",
+          type: this.objectTypes.link,
+          id: "",
+          parent: "",
+          content: ""
+        }
       };
     }
-    import() { }
-    export(JSON) {
-      return JSON.jsonify({ ...this.info, content: this._data });
+    _randomHex(length) {
+      let buffer = "";
+      let combinations = "0123456789abcdef".split("");
+      for (let i = 0; i < length; i++) {
+        buffer += combinations[Math.round(Math.random() * 15)];
+      }
+      return buffer;
+    }
+    readObjectById(id) {
+      this.fsContent.forEach(object => {
+        if (object.id === id) {
+          return object;
+        }
+      })
+      return { error: this.error.notFound };
+    }
+    writeToObjectById(id, name, content) {
+      let target = this.readObjectById(id);
+      if (target.hasOwnProperty("error")) {
+        return target.error
+      }
+      target.name = name ? name : target.name;
+      target.content = content ? content : target.content;
+      this.fsContent.forEach(object => {
+        if (object.id === target.id) {
+          object.id = target.id
+        }
+      })
+      return;
+    }
+    putNewObject(name, type, content) {
+      let newObject = this.blankObjects[type];
+      newObject.name = name;
+      newObject.id = this._randomHex(32)
+      if (!type === this.objectTypes.folder) {
+        newObject.type = type
+      } else {
+        newObject.type = this.objectTypes.folder
+      }
+      this.fsContent.push(newObject);
+      return;
+    }
+    impor() { }
+    export() {
+      return JSON.jsonify({ ...this.fsMetadata, content: this._data });
     }
     newFile(path, filename, content) { }
     newDirectory(path, filename) { }
   }
-  const ufs = UnisonFileSystem;
+
   class UnisonKernel {
     constructor() {
       this.menulogo =
@@ -54,13 +151,12 @@
       this.fs = undefined;
       this.callData = undefined;
       this.apps = [];
+      this.ufs = new UnisonFileSystem();
       vm.on("PROJECT_START", () => {
         this.apps = [];
-        let isDebugging;
-        isDebugging = false;
       })
     }
- // why turn of debbf debgbugging on stasrestartup? -Bambus
+
     getInfo() {
       // Extension Info
       return {
@@ -72,8 +168,6 @@
         docsURI: "https://scratchfakemon.github.io/extensions/docs/Fakemon/Unison",
         // Blocks
         blocks: [
-          
-
           {
             blockType: Scratch.BlockType.LABEL,
             text: Scratch.translate("Kernel Initialization"),
@@ -131,7 +225,7 @@
           {
             opcode: "makefile",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("create a new file named [NAME] with data [DATA]"),
+            text: Scratch.translate("create a new file named [NAME] with data [DATA] and alias [ALIAS]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -140,7 +234,73 @@
               DATA: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: Scratch.translate("Hello, world!"),
+              },
+              ALIAS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("Hello"),
               }
+            }
+          },
+          {
+            opcode: "makefolder",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("create a new folder named [NAME] and alias [ALIAS]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Folder1",
+              },
+              ALIAS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("My Folder"),
+              }
+            }
+          },
+          /*{ // to anyone seeing this, we were going to have a symbolic link feature, but we decided not to. You can still find some traces of symlinks in this pile of spaghetti code, though!
+            opcode: "makesymlink",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("create a new symbolic link named [NAME] to path [PATH] and alias [ALIAS]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "toHello",
+              },
+              PATH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("/Folder1/Hello.txt"),
+              },
+            }
+          },*/
+          {
+            opcode: "uploadFileWithType",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("upload a .[TYPE] file"),
+            arguments: {
+              TYPE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "txt",
+              },
+            }
+          },
+          {
+            opcode: "uploadFileWithoutType",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("upload a file"),
+          },
+          {
+            opcode: "uploadFolder",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("upload a folder"),
+          },
+          {
+            opcode: "moveTo",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("move to the path [PATH]"),
+            arguments: {
+              PATH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("/Folder1/Hello.txt"),
+              },
             }
           },
           {
@@ -162,7 +322,7 @@
           {
             opcode: "editfile",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("edit the contents of [NAME] with new data [DATA]"),
+            text: Scratch.translate("edit the contents of [NAME] with new data [DATA] and new alias [ALIAS]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -172,6 +332,44 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: Scratch.translate("What's up?"),
               },
+              ALIAS: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("Hello"),
+              },
+            }
+          },
+          {
+            opcode: "renamefile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("rename [NAME] to [NEWNAME]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+              NEWNAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Foo",
+              },
+            }
+          },
+          {
+            opcode: "refile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("rename [NAME] to [NEWNAME] with data [DATA]"),
+            arguments: {
+              NAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Hello.txt",
+              },
+              NEWNAME: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Foo",
+              },
+              DATA: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: "Bar",
+              }
             }
           },
           {
@@ -188,7 +386,7 @@
           {
             opcode: "fileexists",
             blockType: Scratch.BlockType.BOOLEAN,
-            text: Scratch.translate("file [NAME] exists?"),
+            text: Scratch.translate("file or folder [NAME] exists?"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -202,7 +400,29 @@
             text: Scratch.translate("file system data"),
             disableMonitor: true,
           },
-          , 
+          {
+            opcode: "currentFolder",
+            blockType: Scratch.BlockType.REPORTER,
+            text: Scratch.translate("all files in this folder"),
+            disableMonitor: true,
+          },
+          {
+            opcode: "zipExport",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("export file system as .zip"),
+          },
+          {
+            opcode: "zipImport",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("import file system from a .zip file and [DOTOFILES] current file system"),
+            arguments: {
+              DOTOFILES: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "FILE_MODE",
+              },
+            }
+          },
+          
           {
             blockType: Scratch.BlockType.LABEL,
             text: Scratch.translate("Apps"),
@@ -216,7 +436,7 @@
           {
             opcode: "declareApp",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("declare a/an [APPTYPE] called [NAME]"),
+            text: Scratch.translate("declare [APPTYPE] called [NAME]"),
             arguments: {
               NAME: {
                 type: Scratch.ArgumentType.STRING,
@@ -224,7 +444,7 @@
               },
               APPTYPE: {
                 type: Scratch.ArgumentType.STRING,
-               menu: "AT_MENU"
+                menu: "AT_MENU"
               }
             }
           },
@@ -240,7 +460,7 @@
               },
               APPTYPE: {
                 type: Scratch.ArgumentType.STRING,
-               menu: "AT_MENU"
+                menu: "AT_MENU"
               }
             }
           },
@@ -304,7 +524,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "SH_MENU",
               },
-              
+
             },
           },
           {
@@ -316,17 +536,17 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "SH2_MENU",
               },
-              
+
             },
-            
-            
+
+
           },
           {
             opcode: "exportTerm",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("export the terminal"),
             disableMonitor: true
-            
+
           },
           {
             opcode: "termLine",
@@ -338,7 +558,7 @@
                 defaultValue: "1",
               },
             }
-            
+
           },
           {
             opcode: "addCmd",
@@ -353,10 +573,10 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "DO_MENU",
               },
-              
+
             },
-            
-            
+
+
           },
           {
             opcode: "cmdExists",
@@ -371,10 +591,10 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "EXISTS_MENU",
               },
-              
+
             },
-            
-            
+
+
           },
           {
             opcode: "forceRunCmd",
@@ -386,7 +606,7 @@
                 defaultValue: "hello",
               },
             }
-            
+
           },
           {
             opcode: "cmdRun",
@@ -397,10 +617,10 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "hello",
               },
-              
+
             },
-            
-            
+
+
           },
           {
             opcode: "cancelCmd",
@@ -412,7 +632,7 @@
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("all terminal commands"),
             disableMonitor: true
-            
+
           },
           {
             opcode: "setIcon",
@@ -423,9 +643,9 @@
                 type: Scratch.ArgumentType.MATRIX,
                 defaultValue: "0101001010010100111000001",
               },
-              
+
             },
-            
+
           },
           {
             opcode: "setIconCostume",
@@ -436,9 +656,9 @@
                 type: Scratch.ArgumentType.COSTUME,
                 //defaultValue: "",
               },
-              
+
             },
-            
+
           },
           {
             opcode: "setIconURI",
@@ -449,9 +669,9 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "https://extensions.turbowarp.org/dango.png",
               },
-              
+
             },
-            
+
           },
           {
             opcode: "setColor",
@@ -462,9 +682,9 @@
                 type: Scratch.ArgumentType.COLOR,
                 defaultValue: "#ffffff",
               },
-              
+
             },
-            
+
           },
           {
             blockType: Scratch.BlockType.LABEL,
@@ -487,15 +707,15 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "DO_MENU",
               },
-              
+
             },
-            
+
           },
           {
             opcode: "allAccs",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("all accounts"),
-            
+
           },
           {
             opcode: "login",
@@ -510,9 +730,9 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "",
               },
-              
+
             },
-            
+
           },
           {
             opcode: "logout",
@@ -523,7 +743,7 @@
             opcode: "currentAcc",
             blockType: Scratch.BlockType.REPORTER,
             text: Scratch.translate("current account"),
-            
+
           },
           {
             opcode: "updateAcc",
@@ -542,7 +762,7 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "Bar",
               },
-              
+
             },
           },
           {
@@ -558,7 +778,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "SH_MENU",
               },
-              
+
             },
           },
           {
@@ -574,7 +794,7 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: this.osName,
               },
-              
+
             },
           },
           {
@@ -590,7 +810,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "REGISTER_STATUS",
               },
-              
+
             },
           },
           {
@@ -613,7 +833,7 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: this.osName,
               },
-              
+
             },
           },
           {
@@ -625,7 +845,7 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: this.osName,
               },
-              
+
             },
           },
           {
@@ -637,7 +857,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "BOOTMGRSTYLE_MENU",
               },
-              
+
             },
           },
           {
@@ -653,7 +873,7 @@
                 type: Scratch.ArgumentType.STRING,
                 menu: "STARTSTOP_MENU"
               },
-              
+
             },
           },
           {
@@ -675,10 +895,10 @@
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "greenFlag",
               },
-              
+
             },
           }
-          
+
 
         ],
         // Menus
@@ -694,7 +914,7 @@
                 text: 'hide',
                 value: 'hide'
               }
-              
+
             ]
           },
           DO_MENU: {
@@ -708,7 +928,7 @@
                 text: 'remove',
                 value: 'rem'
               }
-              
+
             ]
           },
           EXISTS_MENU: {
@@ -722,7 +942,7 @@
                 text: "doesn't exist",
                 value: 'doesnt'
               }
-              
+
             ]
           },
           SH2_MENU: {
@@ -736,7 +956,7 @@
                 text: 'hidden',
                 value: 'hide'
               }
-              
+
             ]
           },
           STARTSTOP_MENU: {
@@ -750,7 +970,7 @@
                 text: 'stop',
                 value: 'stop'
               }
-              
+
             ]
           },
           AT_MENU: {
@@ -789,7 +1009,7 @@
                 text: 'other',
                 value: 'oth'
               },
-              
+
             ]
           },
           BOOTMGRSTYLE_MENU: {
@@ -800,11 +1020,15 @@
             acceptReporters: true,
             items: ["registered", "unregistered"]
           },
-          
-          
-          
+          FILE_MODE: {
+            acceptReporters: true,
+            items: ["keep", "replace"]
+          },
+
+
+
         }
-        
+
       };
       // Block Definitions
     }
@@ -834,7 +1058,7 @@
       vm.runtime.startHats("unisonKernel_whenAppDeclared", {
         NAME: NAME
       })
-      this.apps = [...this.apps, '"'+ NAME +'"'];
+      this.apps = [...this.apps, '"' + NAME + '"'];
     }
     whenAppDeclared({ NAME }) {
       return false; // TODO
@@ -842,143 +1066,174 @@
     sendCall(args, util) {
       this.callData = args.CALL_DATA;
       this.callID = args.CALL_ID;
-      console.log("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true});
+      console.log("unisonKernel_receiveCall", { CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true });
       console.log(args, util)
       //util.startHats("unisonKernel_receiveCall", {CALL_ID: args.CALL_ID, shouldRestartExistingThreads: true}); // Old bad yucky code for starting the hat. 🤮
       util.startHats("unisonKernel_receiveCall"); // New clean shiny code for starting the hat. 😍
-        }
+    }
     retCallData() {
       console.log(this.callData)
       return this.callData;
     }
     retCallID() {
       console.log(this.callID)
-      return this.callID;}
+      return this.callID;
+    }
     receiveCall({ CALL_ID }) {
       return Scratch.Cast.compare(CALL_ID, this.callID) === 0;
     }
     retCall() { // If we can get the ID and Data of a call... (Just trying to help out users ig) - Fakemon :)
       return this.callID + ":" + this.callData // Looks like ID:Data. I don't think it needs changing. :P
     }
-  
-  makefile(args) { 
-    return false; // no file system yet very brokey lol
-  }
-  delfile(args) { 
-    return false; // no file system yet very brokey lol
-  }
-  wipeFs(args) { 
-    return false; // no file system yet very brokey lol
-  }
-  editfile(args) { 
-    return false; // no file system yet very brokey lol
-  }
-  openfile(args) { 
-    return "Not implemented yet!"; // no file system yet very brokey lol
-  }
-  fileexists(args) { 
-    return false; // no file system yet very brokey lol
-  }
-  filesystem(args) { 
-    return "[]"; // no file system yet very brokey lol
-  }
-  shTerm(args) { 
-    return false; // TO DO
-  }
-  exportTerm(args) { 
-    return "Not implemented yet!"; // TO DO
-  }
-  addCmd(args) { 
-    return false; // TO DO
-  }
-  allCmds(args) { 
-    return "Not implemented yet!"; // TO DO
-  }
-  termLine(args) { 
-    return "Not implemented yet!"; // TO DO
-  }
-  forceRunCmd(args) { 
-    return false; // TO DO
-  }
-  cmdExists(args) { 
-    return false; // TO DO
-  }
-  termShown(args) { 
-    return false; // TO DO
-  }
-  setIcon(args) { 
-    let terminalIcon = "Matrix: " + args.ICON;
-    console.log("Terminal icon set to " + terminalIcon)
-    return;
-  }
-  setIconCostume(args) { 
-    let terminalIcon = "Costume: " + args.ICON;
-    console.log("Terminal icon set to " + terminalIcon)
-    return;
-  }
-  setColor(args) { 
-    let terminalColor = args.COLOR;
-    console.log("Terminal color set to " + terminalColor)
-    return;
-  }
-  addAcc(args) { 
-    return;
-  }
-  allAccs(args) { 
-    return "Nope";
-  }
-  login(args) { 
-    return;
-  }
-  logout(args) { 
-    return;
-  }
-  currentAcc(args) { 
-    return "Nope";
-  }
-  updateAcc(args) { 
-    return;
-  }
-  shBoot(args) { 
-    return;
-  }
-  addBoot(args) { 
-    return;
-  }
-  autoBoot(args) { 
-    return;
-  }
-  cancelCmd(args) { 
-    return;
-  }
-  debugStart(args) { 
-    return;
-  }
-debugState(args) { 
-return false;
-}
-debugLogs(args) { 
-  return "Not ready yet :P";
-  }
-  bootReg(args) { 
-    console.log (Scratch.Cast.toBoolean(args.OPTION));
-    return Scratch.Cast.toBoolean(args.OPTION);
+
+    makefile(args) {
+      return false; // no file system yet very brokey lol
     }
-    allReg(args) { 
+    delfile(args) {
+      return false; // no file system yet very brokey lol
+    }
+    wipeFs(args) {
+      return false; // no file system yet very brokey lol
+    }
+    editfile(args) {
+      return false; // no file system yet very brokey lol
+    }
+    openfile(args) {
+      return "Not implemented yet!"; // no file system yet very brokey lol
+    }
+    fileexists(args) {
+      return false; // no file system yet very brokey lol
+    }
+    filesystem(args) {
+      return "[]"; // no file system yet very brokey lol
+    }
+    shTerm(args) {
+      return false; // TO DO
+    }
+    exportTerm(args) {
+      return "Not implemented yet!"; // TO DO
+    }
+    addCmd(args) {
+      return false; // TO DO
+    }
+    allCmds(args) {
+      return "Not implemented yet!"; // TO DO
+    }
+    termLine(args) {
+      return "Not implemented yet!"; // TO DO
+    }
+    forceRunCmd(args) {
+      return false; // TO DO
+    }
+    cmdExists(args) {
+      return false; // TO DO
+    }
+    termShown(args) {
+      return false; // TO DO
+    }
+    setIcon(args) {
+      let terminalIcon = "Matrix: " + args.ICON;
+      console.log("Terminal icon set to " + terminalIcon)
+      return;
+    }
+    setIconCostume(args) {
+      let terminalIcon = "Costume: " + args.ICON;
+      console.log("Terminal icon set to " + terminalIcon)
+      return;
+    }
+    setColor(args) {
+      let terminalColor = args.COLOR;
+      console.log("Terminal color set to " + terminalColor)
+      return;
+    }
+    addAcc(args) {
+      return;
+    }
+    allAccs(args) {
+      return "Nope";
+    }
+    login(args) {
+      return;
+    }
+    logout(args) {
+      return;
+    }
+    currentAcc(args) {
+      return "Nope";
+    }
+    updateAcc(args) {
+      return;
+    }
+    shBoot(args) {
+      return;
+    }
+    addBoot(args) {
+      return;
+    }
+    autoBoot(args) {
+      return;
+    }
+    cancelCmd(args) {
+      return;
+    }
+    debugStart(args) {
+      return;
+    }
+    debugState(args) {
+      return false;
+    }
+    debugLogs(args) {
+      return "Not ready yet :P";
+    }
+    bootReg(args) {
+      console.log(Scratch.Cast.toBoolean(args.OPTION));
+      return Scratch.Cast.toBoolean(args.OPTION);
+    }
+    allReg(args) {
       return "no " + "way"
-      }
-      runDebugCommand(args) { 
-        return args.CMD; // It's a command so it won't return anything. I was just ~~le bored~~
-        }
-        bootMgrStyle(args) { 
-          return true;
-          }
-          setIconURI(args) { 
-            let terminalIcon = "URI: " + args.ICON;
-    console.log("Terminal icon set to " + terminalIcon)
-    return;
-            }
-    
+    }
+    runDebugCommand(args) {
+      return args.CMD; // It's a command so it won't return anything. I was just ~~le bored~~
+    }
+    bootMgrStyle(args) {
+      return true;
+    }
+    setIconURI(args) {
+      let terminalIcon = "URI: " + args.ICON;
+      console.log("Terminal icon set to " + terminalIcon)
+      return;
+    }
+    renamefile(args) {
+      return true;
+    }
+    refile(args) {
+      return true;
+    }
+    makefolder(args) {
+      return true;
+    }
+    moveTo(args) {
+      return true;
+    }
+    currentFolder(args) {
+      return "well i would but... i have to toilet"; // placeholder text go brrrrrr
+    }
+    uploadFileWithType(args) {
+      return true;
+    }
+    uploadFileWithoutType(args) {
+      return true;
+    }
+    uploadFolder(args) {
+      return true;
+    }
+    zipExport(args) {
+      return true;
+    }
+    zipImport(args) {
+      return true;
+    }
+
   }
   Scratch.extensions.register(new UnisonKernel());
 })(Scratch);
