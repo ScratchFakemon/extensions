@@ -304,6 +304,17 @@
             }
           },
           {
+            opcode: "moveMode",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("[ACTION] create new folder when unknown path accessed"),
+            arguments: {
+              ACTION: {
+                type: Scratch.ArgumentType.STRING,
+                menu: "MOVE_ACTION",
+              },
+            }
+          },
+          {
             opcode: "delfile",
             blockType: Scratch.BlockType.COMMAND,
             text: Scratch.translate("delete the file named [NAME]"),
@@ -311,6 +322,21 @@
               NAME: {
                 type: Scratch.ArgumentType.STRING,
                 defaultValue: "Hello.txt",
+              },
+            }
+          },
+          {
+            opcode: "moveFile",
+            blockType: Scratch.BlockType.COMMAND,
+            text: Scratch.translate("move [FILE] to [PATH]"),
+            arguments: {
+              PATH: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("/$recycle.bin"),
+              },
+              FILE: {
+                type: Scratch.ArgumentType.STRING,
+                defaultValue: Scratch.translate("hello.txt"),
               },
             }
           },
@@ -1024,6 +1050,10 @@
             acceptReporters: true,
             items: ["keep", "replace"]
           },
+          MOVE_ACTION: {
+            acceptReporters: true,
+            items: ["do", "don't"]
+          },
 
 
 
@@ -1231,6 +1261,12 @@
       return true;
     }
     zipImport(args) {
+      return true;
+    }
+    moveFile(args) {
+      return true;
+    }
+    moveMode(args) {
       return true;
     }
 
