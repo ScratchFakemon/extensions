@@ -66,7 +66,7 @@
           {
             opcode: "setClipboard",
             blockType: Scratch.BlockType.COMMAND,
-            text: Scratch.translate("copy to clipboard: [TEXT]"),
+            text: Scratch.translate("copy [TEXT] to clipboard"),
             arguments: {
               TEXT: {
                 type: Scratch.ArgumentType.STRING,
