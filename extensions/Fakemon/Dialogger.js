@@ -1,3 +1,8 @@
+// Name: Dialogger
+// ID: fakemonDialogger
+// Description: Displays customizable dialog boxes--much better than the built in ask prompt.
+// By: Scratch_Fakemon <https://scratch.mit.edu/users/Scratch_Fakemon/>
+// License: MPL-2.0
 (function (Scratch) {
   "use strict";
   let latestReply = "";
