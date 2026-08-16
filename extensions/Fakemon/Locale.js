@@ -716,6 +716,8 @@ Locale can be confusing to some users, so accurate documentation should help exp
      * @param {string} matchKey
      */
     _filterArray(array, matchKey) {
+      if (array == null) return [];
+      
       if (array != []) {
         return array.map((/** @type {{ [x: string]: any; }} */ value) => {
           try {
